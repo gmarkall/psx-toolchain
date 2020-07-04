@@ -33,9 +33,9 @@ topdir=$(cd $(dirname $0)/..;pwd)
 cd ${topdir}
 
 # Toolchain
-git clone git://sourceware.org/git/binutils-gdb.git
-git clone https://gcc.gnu.org/git/gcc.git
-git clone git://sourceware.org/git/newlib-cygwin.git newlib
+git clone -b psx git@github.com:gmarkall/binutils-gdb.git
+git clone -b psx git@github.com:gmarkall/gcc.git
+git clone -b psx git@github.com:gmarkall/newlib.git
 
 # Bristol / Embecosm Embedded Benchmark Suite (BEEBS)
 #git clone -b grm-size-wip git@github.com:embecosm/riscv-beebs.git beebs
