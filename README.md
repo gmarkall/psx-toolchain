@@ -1,142 +1,62 @@
-Embecosm RISC-V Toolchain - code size comparison branch
-=======================================================
+GNU / Newlib Toolchain build for PSX
+====================================
 
-This repository consists of scripts and related files for comparing code size
-across RISC-V, ARM, and ARC.
+This repository contains scripts that build:
 
-Obtaining sources
------------------
+- Binutils (as, ld, binary utilities, etc.)
+- GCC Stage 1
+- Newlib
+- GCC Stage 2
 
-First clone this repository, then use the `clone-all.sh` script to clone all
-other sources alongside this repository:
+targeting the Sony PlayStation (PSX / PSone, etc...) by default. This is early /
+in-progress work. Initially I started putting it together because I planned to
+port a C++ GDB RSP server to the playstation, but found the existing toolchains
+don't have good coverage of C++ support. I'm not sure I'll do that now, but I
+still think that a Newlib-based C/C++ (or Fortran, and other GCC frontends, if
+of interest in future) could be interesting.
+
+
+Cloning and building
+--------------------
+
+To clone:
 
 ```
-git clone -b grm-compare-wip git@github.com:embecosm/riscv-toolchain.git
-cd riscv-toolchain
+export PSX_TOOLCHAIN_DIR=`pwd`/psx-toolchain
+git clone git@github.com:gmarkall/psx-toolchain.git
+cd ${PSX_TOOLCHAIN_DIR}
 ./clone-all.sh
 ```
 
-Building
---------
-
-To build the RISC-V and ARM toolchains, use:
+To build:
 
 ```
-./build-riscv.sh
-./build-arm.sh
-./build-arc.sh
+./build-psx.sh
 ```
 
-There are arguments to these scripts, which can be viewed with the `--help`
-option, but the default options are all appropriate for reproducing results
-published from this repository.
+Once building is completed, add `${PSX_TOOLCHAIN_DIR}/../install-psx/bin` to
+your `PATH`.
 
-Benchmarking
-------------
 
-Once the toolchains are built, the benchmarks can be run, with:
+To do
+-----
 
-```
-./benchmark-beebs.py
-```
+An unsorted wishlist of ideas:
 
-Results
--------
+- Test the toolchain / debug any issues preventing execution of generated code
+  on hardware or an emulator.
+- Add PlayStation-specific linker script and configure GCC to automatically use
+  it.
+- Setup testsuite runs (Binutils, GCC compilation, Newlib)
+- Setup execution tests (either using emulator or PSX serial)
+- Add build of SDK (e.g. PXn00bSDK)
+- Add build of the Bristol / Embecosm Embedded Benchmark Suite (BEEBS) for code
+  size evaluation / optimization.
 
-Presentation of results is a work-in-progress at present. In general the results
-for each platform and configuration are held in the `testsuite/` subdir of each
-BEEBS build.
 
-To get a quick summary overview, one can run the following command (and see
-similar output in the `build-riscv` subdir:
+Origin of this repository
+-------------------------
 
-```
-0 graham@pepper 00:34:45 /data/graham/projects/xyz/build-riscv
-$ for i in beebs-*; do { echo $i; tail -n 100 $i/testsuite/beebs.log | grep Total; } done;
-beebs-baseline
-Total                 407681  27100  38510
-beebs-nocrt
-Total                 335661  12347  36287
-beebs-nolibc
-Total                 309762   6487  36119
-beebs-nolibc-nolibgcc
-Total                 193949   6487  36119
-beebs-nolibc-nolibgcc-nolibm
-Total                 182427   5863  36095
-```
-
-Similarly in the `build-arm` subdir:
-
-```
-0 graham@pepper 00:35:08 /data/graham/projects/xyz/build-arm
-$ for i in beebs-*; do { echo $i; tail -n 100 $i/testsuite/beebs.log | grep Total; } done;
-beebs-baseline
-Total                 543278  47032  53064
-beebs-nocrt
-Total                 278586  11487  39375
-beebs-nolibc
-Total                 212825   5616  36111
-beebs-nolibc-nolibgcc
-Total                 170703   5616  36111
-beebs-nolibc-nolibgcc-nolibm
-Total                 160078   5614  36087
-```
-
-And for the `build-arc` subdir:
-
-```
-0 graham@pepper 17:10:18 /data/graham/projects/xyz/build-arc
-$ for i in beebs-*; do { echo $i; tail -n 100 $i/testsuite/beebs.log | grep Total; } done;
-beebs-baseline
-Total                 390796  26176 6831950
-beebs-nocrt
-Total                 339975  11492 6831320
-beebs-nolibc
-Total                 321715   5636 6831080
-beebs-nolibc-nolibgcc
-Total                 190355   5636 6831080
-beebs-nolibc-nolibgcc-nolibm
-Total                 178299   5628 6831072
-```
-
-These results are obtained with the following revisions:
-
-### BEEBS
-
-```
-commit 4e4365160246ba6c30e6cc97195179f32941de34
-Author: Graham Markall <graham.markall@embecosm.com>
-Date:   Tue Jan 15 13:38:44 2019 +0000
-```
-
-### Binutils-GDB
-
-```
-commit d63f2be21bfbedb8a83b5c5f317896bf2bb19a95
-Author: Rainer Orth <ro@CeBiTec.Uni-Bielefeld.DE>
-Date:   Mon Jan 14 15:47:35 2019 +0100
-```
-
-### GCC
-
-```
-commit 0764f7c0c7ccc343793a21026eca1cd15af7e87c
-Author: rguenth <rguenth@138bc75d-0d04-0410-961f-82ee72b054a4>
-Date:   Mon Jan 14 13:11:43 2019 +0000
-```
-
-### Newlib
-
-```
-commit 19b7c7ab2e2fdfb70722bb016e67229c7184a173
-Author: Corinna Vinschen <corinna@vinschen.de>
-Date:   Sun Jan 13 23:35:28 2019 +0100
-```
-
-### RISCV-Toolchain
-
-```
-commit 1866c3702aa0a31291a02fb6f1abd1f5a131b64a
-Author: Graham Markall <graham.markall@embecosm.com>
-Date:   Tue Jan 15 17:23:55 2019 +0000
-```
+This is forked from [The Embecosm RISC-V toolchain
+repository](https://github.com/embecosm/riscv-toolchain/tree/grm-compare-wip).
+The original README can be found in [README.original].
