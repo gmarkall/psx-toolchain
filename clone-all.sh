@@ -36,6 +36,7 @@ cd ${topdir}
 git clone -b psx git@github.com:gmarkall/binutils-gdb.git
 git clone -b psx git@github.com:gmarkall/gcc.git
 git clone -b psx git@github.com:gmarkall/newlib.git
+git clone -b grm-newlib-toolchain git@github.com:gmarkall/PSn00bSDK.git
 
 # Bristol / Embecosm Embedded Benchmark Suite (BEEBS)
 #git clone -b grm-size-wip git@github.com:embecosm/riscv-beebs.git beebs
