@@ -20,15 +20,21 @@ of interest in future) could be interesting.
 Current status
 --------------
 
-All toolchain components build successfully, but compiling the hello example
-from PSn00bSDK when using the psx.ld script from impiaaa fails linking with:
+All toolchain components build successfully, and the hello world example from
+PSn00bSDK builds and appears to execute correctly on ePSXe.
+
+A very quick test of linking a C++ program with g++ fails with:
 
 ```
-/data/gmarkall/psxdev/psx-gnu-toolchain/install-psx/lib/gcc/mipsel-psx-elf/11.0.0/../../../../mipsel-psx-elf/bin/ld: section .data LMA [0000000080013890,00000000800142a3] overlaps section .rel.dyn LMA [0000000080013884,00000000800138a3]
+/data/gmarkall/psxdev/psx-gnu-toolchain/install-psx/lib/gcc/mipsel-psx-elf/11.0.0/../../../../mipsel-psx-elf/bin/ld: /data/gmarkall/psxdev/psx-gnu-toolchain/install-psx/lib/gcc/mipsel-psx-elf/11.0.0/../../../../mipsel-psx-elf/lib/libc.a(lib_a-signalr.o): in function `_kill_r':
+(.text+0x18): undefined reference to `kill'
+/data/gmarkall/psxdev/psx-gnu-toolchain/install-psx/lib/gcc/mipsel-psx-elf/11.0.0/../../../../mipsel-psx-elf/bin/ld: /data/gmarkall/psxdev/psx-gnu-toolchain/install-psx/lib/gcc/mipsel-psx-elf/11.0.0/../../../../mipsel-psx-elf/lib/libc.a(lib_a-signalr.o): in function `_getpid_r':
+(.text+0x50): undefined reference to `getpid'
+collect2: error: ld returned 1 exit status
 ```
 
-This section should not appear in the output, so something is set up wrongly
-somewhere.
+This may be something trivial, like having the link line in the wrong order - I
+have not yet had time to look into this.
 
 
 Cloning and building
@@ -53,6 +59,13 @@ Once building is completed, add `${PSX_TOOLCHAIN_DIR}/../install-psx/bin` to
 your `PATH`.
 
 
+Building the hello example from PSn00bSDK
+-----------------------------------------
+
+Run `make` in `PSn00bSDK/examples/beginner/hello`. The resulting `hello.exe`
+should be executable in the normal way.
+
+
 To do
 -----
 
@@ -65,7 +78,6 @@ An unsorted wishlist of ideas:
 - Add support for PlayStation-specific instructions to binutils.
 - Setup testsuite runs (Binutils, GCC compilation, Newlib)
 - Setup execution tests (either using emulator or PSX serial)
-- Add build of SDK (e.g. PXn00bSDK)
 - Add build of the Bristol / Embecosm Embedded Benchmark Suite (BEEBS) for code
   size evaluation / optimization.
 
