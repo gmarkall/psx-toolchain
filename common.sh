@@ -300,7 +300,7 @@ function build_newlib ()
              --localstatedir=${INSTALL_LOCALSTATE_DIR} \
              --target=${TARGET_TRIPLET} \
              --with-sysroot=${SYSROOT_DIR} \
-             CFLAGS_FOR_TARGET="-DPREFER_SIZE_OVER_SPEED=1 -Os" \
+             CFLAGS_FOR_TARGET="-g -O2 -DHAVE_BLKSIZE -DHAVE_RENAME" \
             --disable-newlib-fvwrite-in-streamio \
             --disable-newlib-fseek-optimization \
             --enable-newlib-nano-malloc \
@@ -309,7 +309,11 @@ function build_newlib ()
             --enable-newlib-reent-small \
             --disable-newlib-wide-orient \
             --disable-newlib-io-float \
-            --enable-newlib-nano-formatted-io
+            --enable-newlib-nano-formatted-io \
+            --enable-lite-exit \
+            --disable-shared \
+            --with-no-pic \
+            --disable-newlib-multithread
     then
         error "Failed to configure newlib"
     fi
@@ -434,5 +438,83 @@ function build_qemu ()
     done
 
     job_done
+}
+
+# ====================================================================
+#                 Build and Install PSn00bSDK tools
+# ====================================================================
+
+function build_psnoob_tools ()
+{
+    job_start "Building PSn00b tools"
+
+    mkdir_and_enter ${PSNOOB_TOOLS_DIR}
+
+    if ! run_command make
+    then
+        error "Failed to build PSn00b tools"
+    fi
+
+    job_done
+
+    # ====================================================================
+    #                Copy tools to install dir
+    # ====================================================================
+
+    job_start "Copying PSn00b tools to install dir"
+
+    for i in ${PSNOOB_TOOLS}
+    do
+        if ! run_command cp ${PSNOOB_TOOLS_DIR}/${i} ${INSTALL_DIR}/bin
+        then
+            error "Failed to copy ${i}"
+        fi
+    done
+
+    job_done
+}
+
+# ====================================================================
+#                 Build and Install PSn00bSDK
+# ====================================================================
+
+function build_psnoob_libs ()
+{
+    job_start "Building PSn00b libs"
+
+    mkdir_and_enter ${PSNOOB_LIB_DIR}
+
+    if ! run_command make
+    then
+        error "Failed to build PSn00b libs"
+    fi
+
+    job_done
+
+    # ====================================================================
+    #                Copy SDK to install dir
+    # ====================================================================
+
+    job_start "Copying PSn00b libs to install dir"
+
+    for i in ${PSNOOB_LIBS}
+    do
+        if ! run_command cp ${PSNOOB_LIB_DIR}/${i} ${INSTALL_DIR}/mipsel-psx-elf/lib
+        then
+            error "Failed to copy ${i}"
+        fi
+    done
+
+    job_done
+
+    job_start "Copying PSn00b includes to install dir"
+
+    if ! run_command cp ${PSNOOB_INCLUDE_DIR}/* ${INSTALL_DIR}/mipsel-psx-elf/include
+    then
+        error "Failed to copy ${i}"
+    fi
+
+    job_done
+
 }
 

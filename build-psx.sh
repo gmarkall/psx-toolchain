@@ -164,7 +164,7 @@ if [ "${TARGET_SPECIFIED}" == "no" ]
 then
     case ${WITH_XLEN} in
 	32)
-	    TARGET_TRIPLET=mipsel-unknown-elf
+	    TARGET_TRIPLET=mipsel-psx-elf
 	    ;;
 	64)
 	    TARGET_TRIPLET=aarch64-none-elf
@@ -316,6 +316,11 @@ export BINUTILS_GDB_SOURCE_DIR=${TOP}/binutils-gdb
 export GCC_SOURCE_DIR=${TOP}/gcc
 export NEWLIB_SOURCE_DIR=${TOP}/newlib
 export QEMU_SOURCE_DIR=${TOP}/qemu
+export PSNOOB_TOOLS_DIR=${TOP}/PSn00bSDK/tools
+export PSNOOB_TOOLS="lzpack/lzpack smxlink/smxlink util/elf2x"
+export PSNOOB_LIB_DIR=${TOP}/PSn00bSDK/libpsn00b
+export PSNOOB_INCLUDE_DIR=${TOP}/PSn00bSDK/libpsn00b/include
+export PSNOOB_LIBS="liblzp.a libpsxapi.a libpsxcd.a libpsxetc.a libpsxgpu.a libpsxgte.a libpsxsio.a libpsxspu.a" # TBC
 #export BEEBS_SOURCE_DIR=${TOP}/beebs
 
 # ====================================================================
@@ -336,6 +341,12 @@ build_binutils_gdb
 build_gcc_stage_1
 build_newlib
 build_gcc_stage_2
+build_psnoob_tools
+
+# Add toolchain to path
+export PATH=${INSTALL_DIR}/bin:${PATH}
+
+build_psnoob_libs
 
 # ====================================================================
 #                           Finished
