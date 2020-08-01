@@ -1,5 +1,5 @@
-GNU / Newlib Toolchain build for PSX
-====================================
+GNU / Newlib C/C++ Toolchain build for PSX
+==========================================
 
 This repository contains scripts that build:
 
@@ -21,20 +21,11 @@ Current status
 --------------
 
 All toolchain components build successfully, and the hello world example from
-PSn00bSDK builds and appears to execute correctly on ePSXe.
+PSn00bSDK builds and appears to execute correctly on ePSXe. The hello world
+example converted to C++ and using the STL (creating and traversing a vector)
+also works correctly.
 
-A very quick test of linking a C++ program with g++ fails with:
-
-```
-/data/gmarkall/psxdev/psx-gnu-toolchain/install-psx/lib/gcc/mipsel-psx-elf/11.0.0/../../../../mipsel-psx-elf/bin/ld: /data/gmarkall/psxdev/psx-gnu-toolchain/install-psx/lib/gcc/mipsel-psx-elf/11.0.0/../../../../mipsel-psx-elf/lib/libc.a(lib_a-signalr.o): in function `_kill_r':
-(.text+0x18): undefined reference to `kill'
-/data/gmarkall/psxdev/psx-gnu-toolchain/install-psx/lib/gcc/mipsel-psx-elf/11.0.0/../../../../mipsel-psx-elf/bin/ld: /data/gmarkall/psxdev/psx-gnu-toolchain/install-psx/lib/gcc/mipsel-psx-elf/11.0.0/../../../../mipsel-psx-elf/lib/libc.a(lib_a-signalr.o): in function `_getpid_r':
-(.text+0x50): undefined reference to `getpid'
-collect2: error: ld returned 1 exit status
-```
-
-This may be something trivial, like having the link line in the wrong order - I
-have not yet had time to look into this.
+Further testing is needed to establish what does and doesn't work more fully.
 
 
 Cloning and building
